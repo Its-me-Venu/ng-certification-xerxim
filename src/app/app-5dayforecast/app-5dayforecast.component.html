@@ -1,0 +1,39 @@
+<h4 class="title">Forecast page:</h4>
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        5-day forecast for {{ forecastData.city.name }} {{ pincode }}
+      </h3>
+    </div>
+    <ul
+      class="list-group"
+      *ngFor="let foreCastData of forecastData.list; let i = index"
+    >
+      <!---->
+      <li class="list-group-item">
+        {{ foreCastData.dt | dateConverter | date: 'fullDate' }}:
+        {{ foreCastData.weather[0].main }}
+        - Min: {{ foreCastData.temp.min }} - Max: {{ foreCastData.temp.max }}
+
+        <span class="iconSpac">
+          <img
+            class="wIcon"
+            *ngIf="weatherImg[foreCastData.weather[0].main]"
+            src="{{
+              baseWeatherImgPath + weatherImg[foreCastData.weather[0].main]
+            }}"
+          />
+        </span>
+      </li>
+    </ul>
+  </div>
+  <button
+    class="btn btn-success"
+    tabindex="0"
+    id="mainPageBtn"
+    (click)="goBackWeather()"
+  >
+    &lt; Back to main page
+  </button>
+</div>
