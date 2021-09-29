@@ -1,0 +1,18 @@
+h4.title {
+  text-align: center;
+  color: #337ab7;
+}
+.well {
+  max-width: 1000px;
+  margin: auto;
+}
+.well.form-sec {
+  text-align: center;
+}
+.form-control {
+  max-width: 200px;
+  margin: auto;
+}
+img {
+  max-width: 150px;
+}
