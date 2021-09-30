@@ -51,9 +51,6 @@
     </div>
   </form>
 
-  <div *ngIf="isLoader" class="spinner-border text-success" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
   <div *ngFor="let data of DataArray; let i = index">
     <div class="well flex">
       <div>
@@ -78,6 +75,10 @@
         />
       </div>
     </div>
+  </div>
+
+  <div *ngIf="isLoader" class="spinner-border text-success" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
 </div>
 <router-outlet></router-outlet>
