@@ -1,12 +1,12 @@
-<h4 class="title">Wheather App</h4>
+<h4 class="title">Weather Application</h4>
 
 <div class="container-fluid">
   <form
-    name="weatherForm"
-    [formGroup]="weatherForm"
-    (ngSubmit)="weatherForm.valid && onSubmit()"
+    name="weatherFormDetails"
+    [formGroup]="weatherFormDetails"
+    (ngSubmit)="weatherFormDetails.valid && onSubmit()"
   >
-    <div class="well form-sec">
+    <div class="well">
       <h2>Enter a zipcode:</h2>
       <input
         class="form-control"
@@ -16,22 +16,23 @@
       />
       <div
         *ngIf="
-          (weatherForm.get('zipcode').touched ||
-            weatherForm.Invaild ||
-            weatherForm.submitted) &&
-          weatherForm.get('zipcode').errors
+          (weatherFormDetails.get('zipcode').touched ||
+            weatherFormDetails.Invaild ||
+            weatherFormDetails.submitted) &&
+          weatherFormDetails.get('zipcode').errors
         "
       >
         <div
           *ngIf="
-            weatherForm.get('zipcode').errors.required || weatherForm.invaild
+            weatherFormDetails.get('zipcode').errors.required ||
+            weatherFormDetails.invaild
           "
           class="text-danger"
         >
           Zipcode is required
         </div>
         <div
-          *ngIf="weatherForm.get('zipcode').errors.pattern"
+          *ngIf="weatherFormDetails.get('zipcode').errors.pattern"
           class="text-danger"
         >
           Zipcode is Invaild
@@ -41,39 +42,37 @@
       <button
         class="btn btn-primary"
         id="addLocationBtn"
-        [disabled]="!weatherForm.valid"
+        [disabled]="!weatherFormDetails.valid"
       >
         Add location
       </button>
     </div>
   </form>
 
-  <div *ngIf="isSpinner" class="spinner-border text-success" role="status">
+  <div *ngIf="isLoader" class="spinner-border text-success" role="status">
     <span class="sr-only">Loading...</span>
   </div>
-  <div *ngFor="let weatherData of weatherDataArray; let i = index">
+  <div *ngFor="let data of DataArray; let i = index">
     <div class="well flex">
       <div>
-        <h3>{{ weatherData.data.name }}</h3>
-        <h4 *ngIf="weatherData">
-          Current conditions: {{ weatherData.data.weather[0].main }}
+        <h3>{{ data.data.name }}</h3>
+        <h4 *ngIf="data">
+          Current conditions: {{ data.data.weather[0].main }}
         </h4>
-        <h4>Temperatures: {{ weatherData.data.main.temp }}</h4>
-        <p>Min Today: {{ weatherData.data.main.temp_min }}</p>
-        <p>Max Today: {{ weatherData.data.main.temp_max }}</p>
+        <h4>Temperatures: {{ data.data.main.temp }}</h4>
+        <p>Min Today: {{ data.data.main.temp_min }}</p>
+        <p>Max Today: {{ data.data.main.temp_max }}</p>
         <p>
-          <a href="{{ weatherData.forecastLink }}"
-            >Show 5-day forecast for {{ weatherData.data.name }}</a
+          <a href="{{ data.urlLink }}"
+            >Show 5-day forecast for {{ data.data.name }}</a
           >
         </p>
       </div>
       <div>
-        <span class="close" (click)="deleteCity(i)">×</span>
+        <span class="close" (click)="remove(i)">×</span>
         <img
-          *ngIf="weatherImg[weatherData.data.weather[0].main]"
-          src="{{
-            baseWeatherImgPath + weatherImg[weatherData.data.weather[0].main]
-          }}"
+          *ngIf="weatherImg[data.data.weather[0].main]"
+          src="{{ orgImgPath + weatherImg[data.data.weather[0].main] }}"
         />
       </div>
     </div>

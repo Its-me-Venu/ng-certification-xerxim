@@ -8,45 +8,45 @@ import { WeatherService } from './../services/weather.service';
   styleUrls: ['./app-5dayforecast.component.css'],
 })
 export class App5dayforecastComponent implements OnInit {
-  pincode: string = '';
-  forecastData = { city: '', cod: '', message: 0, cnt: 40, list: [] };
-
-  baseWeatherImgPath: string;
+  zipcode: any = '';
+  sampleDataJson = { city: '', list: [] };
+  orgImgPath: any;
   weatherImg: any;
 
   constructor(
     private router: Router,
     private arouter: ActivatedRoute,
-    private ws: WeatherService
+    private weatherService: WeatherService
   ) {
-    this.baseWeatherImgPath = this.ws.getBaseWhetherImgPath();
-    this.weatherImg = this.ws.getWeatherImgs();
+    this.orgImgPath = this.weatherService.getImgPath();
+    this.weatherImg = this.weatherService.getWeaImg();
   }
 
   ngOnInit() {
     this.arouter.params.subscribe((params) => {
-      this.pincode = params['id'];
-      if (this.pincode != '' && this.pincode != null) {
-        this.addForecastData(this.pincode);
+      this.zipcode = params['id'];
+      if (this.zipcode != '' && this.zipcode != null) {
+        this.addForecastData(this.zipcode);
       }
     });
   }
-  goBackWeather() {
+
+  addForecastData(zipcode) {
+    this.weatherService.getData(zipcode).subscribe(
+      (result) => {
+        console.log(this.zipcode);
+        this.sampleDataJson = result;
+      },
+      (error) => {
+        console.log('error', error);
+        alert('Data  not found try with other zipcode');
+      }
+    );
+  }
+  back() {
     this.router.navigateByUrl('');
   }
   dateConverter(miliseconds) {
     return new Date(miliseconds * 1000);
-  }
-  addForecastData(pincode) {
-    this.ws.getForcastData(pincode).subscribe(
-      (result) => {
-        console.log(this.pincode);
-        this.forecastData = result;
-      },
-      (error) => {
-        console.log('error', error);
-        alert('Data  not found try with other Pincode');
-      }
-    );
   }
 }

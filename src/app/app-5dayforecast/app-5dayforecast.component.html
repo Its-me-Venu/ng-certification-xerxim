@@ -1,39 +1,31 @@
-<h4 class="title">Forecast page:</h4>
+<h4 class="title">5 Day Forecast page:</h4>
 <div class="container-fluid">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">
-        5-day forecast for {{ forecastData.city.name }} {{ pincode }}
+        5-day forecast for {{ sampleDataJson.city.name }} {{ zipcode }}
       </h3>
     </div>
     <ul
       class="list-group"
-      *ngFor="let foreCastData of forecastData.list; let i = index"
+      *ngFor="let data of sampleDataJson.list; let i = index"
     >
-      <!---->
       <li class="list-group-item">
-        {{ foreCastData.dt | dateConverter | date: 'fullDate' }}:
-        {{ foreCastData.weather[0].main }}
-        - Min: {{ foreCastData.temp.min }} - Max: {{ foreCastData.temp.max }}
+        {{ data.dt | dateConverter | date: 'fullDate' }}:
+        {{ data.weather[0].main }}
+        - Min: {{ data.temp.min }} - Max: {{ data.temp.max }}
 
         <span class="iconSpac">
           <img
-            class="wIcon"
-            *ngIf="weatherImg[foreCastData.weather[0].main]"
-            src="{{
-              baseWeatherImgPath + weatherImg[foreCastData.weather[0].main]
-            }}"
+            class="imgicon"
+            *ngIf="weatherImg[data.weather[0].main]"
+            src="{{ orgImgPath + weatherImg[data.weather[0].main] }}"
           />
         </span>
       </li>
     </ul>
   </div>
-  <button
-    class="btn btn-success"
-    tabindex="0"
-    id="mainPageBtn"
-    (click)="goBackWeather()"
-  >
+  <button class="btn btn-success" (click)="back()">
     &lt; Back to main page
   </button>
 </div>

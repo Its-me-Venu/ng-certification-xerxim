@@ -11,35 +11,35 @@ export class WeatherService {
   private forecastAPI =
     'https://api.openweathermap.org/data/2.5/forecast/daily?zip=';
 
-  private weatherImgPath = 'https://www.angulartraining.com/images/weather/';
+  private allImgPath = 'https://www.angulartraining.com/images/weather/';
 
   constructor(private httpClient: HttpClient) {}
 
-  addWeatherData(pincode: any): Observable<any> {
-    let url =
-      this.weatherAPI + pincode + ',us&units=metric&appid=' + this.APIKey;
-    return this.httpClient.get(url);
-  }
-  getForcastData(pincode: any): Observable<any> {
-    let url =
-      this.forecastAPI +
-      pincode +
-      ',us&cnt=5&units=metric&appid=' +
-      this.APIKey;
-    return this.httpClient.get(url);
-  }
-
-  private weatherImgs: any = {
+  private weatherallImgs: any = {
     Clear: 'sun.png',
     Clouds: 'clouds.png',
     Rain: 'rain.png',
     Snow: 'snow.png',
   };
 
-  getBaseWhetherImgPath(): string {
-    return this.weatherImgPath;
+  getImgPath(): string {
+    return this.allImgPath;
   }
-  getWeatherImgs(): any {
-    return this.weatherImgs;
+  getWeaImg(): any {
+    return this.weatherallImgs;
+  }
+
+  addData(pincode: any): Observable<any> {
+    let url =
+      this.weatherAPI + pincode + ',us&units=metric&appid=' + this.APIKey;
+    return this.httpClient.get(url);
+  }
+  getData(pincode: any): Observable<any> {
+    let url =
+      this.forecastAPI +
+      pincode +
+      ',us&cnt=5&units=metric&appid=' +
+      this.APIKey;
+    return this.httpClient.get(url);
   }
 }

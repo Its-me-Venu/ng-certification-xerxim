@@ -8,24 +8,23 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./app-weather.component.css'],
 })
 export class AppWeatherComponent implements OnInit {
-  isSpinner = false;
-  weatherData = { zipcode: '', data: '', forecastLink: '', icon: '' };
-  weatherDataArray: any[] = [];
-
-  baseWeatherImgPath: string;
+  isLoader = false;
+  sampleData = { zipcode: '', data: '', urlLink: '' };
+  DataArray: any[] = [];
+  orgImgPath: any;
   weatherImg: any;
 
-  constructor(private ws: WeatherService) {
-    this.baseWeatherImgPath = this.ws.getBaseWhetherImgPath();
-    this.weatherImg = this.ws.getWeatherImgs();
+  constructor(private weatherService: WeatherService) {
+    this.orgImgPath = this.weatherService.getImgPath();
+    this.weatherImg = this.weatherService.getWeaImg();
   }
 
   ngOnInit() {
-    let weatherData = JSON.parse(localStorage.getItem('weatherData'));
-    this.weatherDataArray = weatherData || [];
+    let weatherData = JSON.parse(localStorage.getItem('weatherDetails'));
+    this.DataArray = weatherData || [];
   }
 
-  weatherForm = new FormGroup({
+  weatherFormDetails = new FormGroup({
     zipcode: new FormControl('', [
       Validators.required,
       Validators.pattern('^(?!0{3})[0-9]{5}$'),
@@ -33,70 +32,57 @@ export class AppWeatherComponent implements OnInit {
   });
 
   getZipcode() {
-    return this.weatherForm.get('zipcode').value;
+    return this.weatherFormDetails.get('zipcode').value;
   }
 
   onSubmit() {
-    this.isSpinner = true;
-    this.getWeatherData(this.getZipcode());
-    this.weatherForm.reset();
+    this.isLoader = true;
+    this.getWeatherDetails(this.getZipcode());
+    this.weatherFormDetails.reset();
   }
-  getWeatherData(zipcode) {
-    this.ws.addWeatherData(zipcode).subscribe(
+  getWeatherDetails(zipcode) {
+    this.weatherService.addData(zipcode).subscribe(
       (result) => {
-        this.isSpinner = false;
-        this.weatherData.data = result;
-        this.weatherData.zipcode = zipcode;
-        this.weatherData.forecastLink = 'forecast/' + this.weatherData.zipcode;
-        console.log(this.weatherData.data);
-        if (this.weatherData.data != null && this.weatherData.data != '') {
-          let index = this.findById(this.weatherData.zipcode);
+        this.isLoader = false;
+        this.sampleData.data = result;
+        this.sampleData.zipcode = zipcode;
+        this.sampleData.urlLink = 'forecast/' + this.sampleData.zipcode;
+        console.log(this.sampleData.data);
+        if (this.sampleData.data != null && this.sampleData.data != '') {
+          let index = this.findById(this.sampleData.zipcode);
           if (index != -1) {
-            this.weatherDataArray[index].zipcode = this.weatherData.zipcode;
-            this.weatherDataArray[index].data = this.weatherData.data;
+            this.DataArray[index].zipcode = this.sampleData.zipcode;
+            this.DataArray[index].data = this.sampleData.data;
             localStorage.setItem(
-              'weatherData',
-              JSON.stringify(this.weatherDataArray)
+              'weatherDetails',
+              JSON.stringify(this.DataArray)
             );
           } else {
-            this.weatherData.forecastLink =
-              'forecast/' + this.weatherData.zipcode;
-            this.weatherDataArray.push(
-              JSON.parse(JSON.stringify(this.weatherData))
-            );
+            this.sampleData.urlLink = 'forecast/' + this.sampleData.zipcode;
+            this.DataArray.push(JSON.parse(JSON.stringify(this.sampleData)));
             localStorage.setItem(
-              'weatherData',
-              JSON.stringify(this.weatherDataArray)
+              'weatherDetails',
+              JSON.stringify(this.DataArray)
             );
           }
         } else {
-          alert(
-            'weather Data not found for given zipcode, try with other zipcode'
-          );
+          alert('Data not found,try with other zipcode');
         }
       },
       (error) => {
         console.log('error', error);
-        this.isSpinner = true;
-        alert(
-          'weather Data not found for given zipcode, try with other zipcode'
-        );
+        this.isLoader = true;
+        alert('Data not found,try with other zipcode');
       }
     );
   }
   findById(zipcode: any) {
-    let index = this.weatherDataArray.findIndex(
-      (obj) => obj.zipcode == zipcode
-    );
+    let index = this.DataArray.findIndex((obj) => obj.zipcode == zipcode);
     return index;
   }
-  clearWeatherData() {
-    this.weatherData.data = '';
-    this.weatherData.zipcode = '';
-    this.weatherData.forecastLink = '';
-  }
-  deleteCity(index) {
-    this.weatherDataArray.splice(index, 1);
-    localStorage.setItem('weatherData', JSON.stringify(this.weatherDataArray));
+
+  remove(index) {
+    this.DataArray.splice(index, 1);
+    localStorage.setItem('weatherDetails', JSON.stringify(this.DataArray));
   }
 }
