@@ -13,6 +13,8 @@
         formControlName="zipcode"
         placeholder="Zipcode"
         type="text"
+        maxlength="10"
+        (keypress)="omit_special_char($event)"
       />
       <div
         *ngIf="
